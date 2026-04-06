@@ -11,13 +11,13 @@ from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# ================= APP SETUP =================
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = os.environ.get("SECRET_KEY", "secret123")  # Use env variable for production
 
 # ================= DATABASE =================
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 sns.set_style("whitegrid")
 
@@ -33,11 +33,11 @@ with app.app_context():
     db.create_all()
 
 # ================= FOLDERS =================
-DOWNLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "downloads")
-if not os.path.exists(DOWNLOAD_FOLDER):
-    os.makedirs(DOWNLOAD_FOLDER)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads")
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-# ================= LOGIN =================
+# ================= ROUTES =================
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error = None
@@ -52,7 +52,6 @@ def login():
 
         user = User.query.filter_by(username=username).first()
 
-        # LOGIN
         if user:
             if user.password != password:
                 error = "❌ Incorrect password!"
@@ -60,8 +59,6 @@ def login():
                 session['user'] = user.username
                 session['email'] = user.email
                 return redirect(url_for('home'))
-
-        # SIGNUP
         else:
             new_user = User(username=username, email=email, password=password)
             db.session.add(new_user)
@@ -72,20 +69,17 @@ def login():
 
     return render_template('login.html', error=error)
 
-# ================= LOGOUT =================
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# ================= HOME =================
 @app.route('/home')
 def home():
     if 'user' not in session:
         return redirect(url_for('login'))
     return render_template('home.html', username=session['user'])
 
-# ================= DOWNLOAD =================
 @app.route('/download/<filename>')
 def download(filename):
     if 'user' not in session:
@@ -100,12 +94,12 @@ def upload():
 
     try:
         file = request.files['file']
-        if file.filename == '':
+        if not file or file.filename == '':
             return "❌ No file selected"
 
         df = pd.read_csv(file)
 
-        # ---------- CLEANING ----------
+        # Cleaning
         if 'customerID' in df.columns:
             df.drop(['customerID'], axis=1, inplace=True)
         df.fillna(df.mean(numeric_only=True), inplace=True)
@@ -118,11 +112,10 @@ def upload():
         df.dropna(subset=['Churn'], inplace=True)
         df['Churn'] = df['Churn'].astype(int)
 
-        # Encode categorical
         for col in df.select_dtypes(include=['object']).columns:
             df[col] = df[col].astype('category').cat.codes
 
-        # ---------- MODEL ----------
+        # Model
         X = df.drop('Churn', axis=1)
         y = df['Churn']
 
@@ -134,20 +127,18 @@ def upload():
 
         predictions = model.predict(X_scaled)
         score = model.score(X_scaled, y)
-
         df['Prediction'] = ["Churn" if p == 1 else "No Churn" for p in predictions]
 
         churn = (predictions == 1).sum()
         total = len(predictions)
 
-        # ---------- SAVE RESULT FOR DOWNLOAD ----------
+        # Save result
         unique_filename = f"{session['user']}_prediction_{uuid.uuid4().hex}.csv"
         output_file = os.path.join(DOWNLOAD_FOLDER, unique_filename)
         df.to_csv(output_file, index=False)
-
         download_link = url_for('download', filename=unique_filename)
 
-        # ---------- GRAPH ----------
+        # Graphs
         plt.figure(figsize=(5, 4))
         sns.countplot(x=predictions)
         plt.title("Churn Prediction")
@@ -157,7 +148,6 @@ def upload():
         graph1 = base64.b64encode(img.getvalue()).decode()
         plt.close()
 
-        # ---------- HEATMAP ----------
         corr = df.corr(numeric_only=True)
         plt.figure(figsize=(6, 5))
         sns.heatmap(corr, cmap='coolwarm', annot=False)
@@ -167,7 +157,6 @@ def upload():
         graph2 = base64.b64encode(img2.getvalue()).decode()
         plt.close()
 
-        # ---------- TABLE ----------
         table = df.head(100).to_html(index=False)
 
         return render_template(
@@ -186,7 +175,6 @@ def upload():
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
-# ================= SUMMARY =================
 @app.route('/summary', methods=['POST'])
 def summary():
     if 'user' not in session:
@@ -228,4 +216,4 @@ def summary():
 
 # ================= RUN =================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
