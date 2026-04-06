@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- PRINT FIX -->
+    <style>
+        @media print {
+            .navbar,
+            .back-btn,
+            .download-btn {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 10px solid #ccc;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- AI PARTICLES -->
+    <div class="ai-bg">
+        <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <span class="user">👤 {{ username }}</span>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="result-container">
+
+    {% if summary_only %}
+        <!-- SUMMARY DASHBOARD -->
+        <div class="card">
+            <h2 class="summary-title">📊 Customer Summary Dashboard</h2>
+        </div>
+
+        <!-- STATS GRID -->
+        <div class="stats-grid">
+            <div class="stat-box total-box">
+                <h3>Total Customers</h3>
+                <p class="stat-number">{{ total }}</p>
+            </div>
+
+            <div class="stat-box churn-box">
+                <h3>Not Connected</h3>
+                <p class="stat-number">{{ churn }}</p>
+            </div>
+
+            <div class="stat-box connected-box">
+                <h3>Connected</h3>
+                <p class="stat-number">{{ connected }}</p>
+            </div>
+        </div>
+
+        <!-- DATASET INFO -->
+        <div class="card">
+            <h3>📂 Dataset Information</h3>
+            <p class="label">Columns:</p>
+            <p class="info-text">{{ columns|join(', ') }}</p>
+
+            <p class="label">Numeric Columns:</p>
+            <p class="info-text">{{ numeric_cols|join(', ') }}</p>
+
+            <p class="label">Categorical Columns:</p>
+            <p class="info-text">{{ categorical_cols|join(', ') }}</p>
+        </div>
+
+    {% else %}
+        <!-- AI RESULT -->
+        <div class="card">
+            <h2>📊 AI Prediction Summary</h2>
+            <p><strong>Total Customers:</strong> {{ total }}</p>
+            <p><strong>Churn Customers:</strong> <span class="red">{{ churn }}</span></p>
+            <p><strong>Model Accuracy:</strong> <span class="blue">{{ score }}%</span></p>
+        </div>
+
+        <div class="card">
+            <h2>📈 Churn Prediction Graph</h2>
+            <img src="data:image/png;base64,{{ graph1 }}" alt="Churn Graph">
+        </div>
+
+        <div class="card">
+            <h2>🔥 Feature Correlation Heatmap</h2>
+            {% if graph2 %}
+                <img src="data:image/png;base64,{{ graph2 }}" alt="Heatmap">
+            {% else %}
+                <p>No heatmap available</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>📋 Prediction Table (first 100 rows)</h2>
+            {% if tables %}
+            <div class="table-wrapper">
+                {% for table in tables %}
+                    {{ table | safe }}
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>No data available</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- BUTTONS -->
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{{ url_for('home') }}" class="back-btn">⬅ Home</a>
+
+        {% if download_link %}
+            <a href="{{ download_link }}" class="download-btn" style="padding:10px; background:green; color:white; border-radius:5px;">
+                ⬇️ Download CSV
+            </a>
+        {% endif %}
+
+        <button onclick="printPage()" class="download-btn">
+            🖨 Download PDF
+        </button>
+    </div>
+
+    </div>
+
+    <!-- PRINT SCRIPT -->
+    <script>
+    function printPage() {
+        window.print();
+    }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</body>
+</html>

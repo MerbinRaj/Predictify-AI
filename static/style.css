@@ -1,0 +1,533 @@
+/* ================= GLOBAL RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ================= BODY ================= */
+body {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    color: white;
+}
+
+/* ================= FUTURISTIC BACKGROUND ================= */
+.background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(270deg, #0f0c29, #302b63, #6a11cb, #24243e);
+    background-size: 600% 600%;
+    animation: gradientMove 12s ease infinite;
+    z-index: -1;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ================= FLOATING ICONS ================= */
+.icon {
+    position: absolute;
+    font-size: 26px;
+    opacity: 0.6;
+    animation: floatUp 10s linear infinite;
+    color: #c084fc;
+    text-shadow: 0 0 10px #a855f7, 0 0 20px #9333ea;
+}
+
+.icon:nth-child(1) { left: 10%; animation-delay: 0s; }
+.icon:nth-child(2) { left: 30%; animation-delay: 2s; }
+.icon:nth-child(3) { left: 60%; animation-delay: 4s; }
+.icon:nth-child(4) { left: 80%; animation-delay: 6s; }
+
+@keyframes floatUp {
+    0% { bottom: -60px; transform: translateX(0); }
+    100% { bottom: 110%; transform: translateX(30px); }
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
+    padding: 12px 20px;
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: #c084fc;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.navbar a:hover {
+    color: white;
+    text-shadow: 0 0 10px #a855f7;
+}
+
+/* ================= CONTAINER ================= */
+.container, .path {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 15px;
+    margin: auto;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+}
+
+/* ================= INPUT ================= */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+/* ================= BUTTONS ================= */
+button, .btn-ai, .btn-summary {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin: 8px;
+    font-size: 16px;
+    transition: 0.3s;
+    color: rgb(0, 0, 2);
+}
+
+/* AI Button */
+.btn-ai {
+    background: linear-gradient(45deg, #7c3aed, #c084fc);
+}
+.btn-ai:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #a855f7;
+}
+
+/* Summary Button */
+.btn-summary {
+    background: linear-gradient(45deg, #9333ea, #6d28d9);
+}
+.btn-summary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #7c3aed;
+}
+
+/* ================= RESULT CONTAINER ================= */
+.result-container {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+/* ================= CARD ================= */
+.card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 900px;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* ================= SUMMARY GRID ================= */
+.stats-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 220px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    transition: 0.3s;
+}
+
+.stat-box:hover {
+    transform: scale(1.05);
+}
+
+/* COLORS */
+.total-box { background: linear-gradient(45deg, #3b82f6, #60a5fa); }
+.churn-box { background: linear-gradient(45deg, #ef4444, #f87171); }
+.connected-box { background: linear-gradient(45deg, #22c55e, #4ade80); }
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* ================= TEXT COLORS ================= */
+.red { color: #ff4d4d; }
+.green { color: #22c55e; }
+.blue { color: #60a5fa; }
+
+/* ================= TABLE ================= */
+.table-wrapper {
+    overflow-x: auto;
+    max-height: 400px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #7c3aed;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    border: 1px solid #555;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background: rgba(255,255,255,0.05);
+}
+
+/* ================= BUTTONS ================= */
+.back-btn, .download-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin: 15px;
+    color: white;
+    transition: 0.3s;
+}
+
+.back-btn {
+    background: #ef4444;
+}
+.back-btn:hover {
+    box-shadow: 0 0 10px red;
+}
+
+.download-btn {
+    background: linear-gradient(45deg, #22c55e, #16a34a);
+}
+.download-btn:hover {
+    box-shadow: 0 0 10px #22c55e;
+}
+
+/* ================= IMAGES ================= */
+img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+/* ================= LOGIN PAGE ================= */
+h1 {
+    text-align: center;
+    margin-bottom: 100px;
+    text-shadow: 0 0 15px #8b5cf6;
+    margin-top: 20px;
+}
+
+.path {
+    position: relative;
+    
+}
+
+.path::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(139,92,246,0.3), transparent);
+    filter: blur(60px);
+    z-index: -1;
+}
+
+/* ================= PRINT ================= */
+@media print {
+    .navbar, .download-btn, .back-btn {
+        display: none;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .card {
+        width: 95%;
+    }
+
+    table {
+        font-size: 12px;
+    }
+}
+/* ================= AI FLOATING ICONS ================= */
+.icon {
+    position: absolute;
+    font-size: 28px;
+    opacity: 0.7;
+    animation: floatAI 12s linear infinite;
+    color: #c084fc;
+    text-shadow: 0 0 10px #a855f7, 0 0 25px #9333ea;
+}
+
+/* Random positions */
+.icon:nth-child(1) { left: 5%; animation-delay: 0s; }
+.icon:nth-child(2) { left: 20%; animation-delay: 2s; }
+.icon:nth-child(3) { left: 40%; animation-delay: 4s; }
+.icon:nth-child(4) { left: 60%; animation-delay: 6s; }
+.icon:nth-child(5) { left: 75%; animation-delay: 8s; }
+.icon:nth-child(6) { left: 90%; animation-delay: 10s; }
+
+/* Smooth floating + side movement */
+@keyframes floatAI {
+    0% {
+        bottom: -60px;
+        transform: translateX(0) scale(0.8);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateX(40px) scale(1);
+    }
+    100% {
+        bottom: 110%;
+        transform: translateX(-40px) scale(1.2);
+        opacity: 0;
+    }
+}
+transform: rotate(360deg);
+filter: blur(0.5px);
+/* ================= AI PARTICLES BACKGROUND ================= */
+.ai-bg span {
+    position: fixed;
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: #a855f7;
+    box-shadow: 0 0 10px #a855f7, 0 0 20px #7c3aed;
+    border-radius: 50%;
+    animation: moveParticles 10s linear infinite;
+    z-index: 0;
+}
+
+/* random positions */
+.ai-bg span:nth-child(1) { left: 10%; animation-delay: 0s; }
+.ai-bg span:nth-child(2) { left: 30%; animation-delay: 2s; }
+.ai-bg span:nth-child(3) { left: 50%; animation-delay: 4s; }
+.ai-bg span:nth-child(4) { left: 70%; animation-delay: 6s; }
+.ai-bg span:nth-child(5) { left: 90%; animation-delay: 8s; }
+
+@keyframes moveParticles {
+    0% { bottom: -10px; transform: scale(1); }
+    50% { transform: scale(1.8); }
+    100% { bottom: 110%; transform: scale(1); }
+}
+
+/* ================= NEON TEXT EFFECT ================= */
+h1, h2 {
+    color: #fff;
+    text-shadow:
+        0 0 5px #a855f7,
+        0 0 10px #9333ea,
+        0 0 20px #7c3aed;
+}
+
+/* ================= GLASSMORPHISM CARD ================= */
+.card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 
+        0 0 20px rgba(168, 85, 247, 0.3),
+        inset 0 0 10px rgba(168, 85, 247, 0.2);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 
+        0 0 30px rgba(168, 85, 247, 0.6),
+        inset 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+/* ================= BUTTON GLOW ================= */
+.download-btn, .back-btn, .btn-ai, .btn-summary {
+    position: relative;
+    overflow: hidden;
+}
+
+.download-btn::before,
+.back-btn::before,
+.btn-ai::before,
+.btn-summary::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    top: -50%;
+    left: -50%;
+    transform: rotate(25deg);
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.download-btn:hover::before,
+.back-btn:hover::before,
+.btn-ai:hover::before,
+.btn-summary:hover::before {
+    opacity: 1;
+    animation: shine 1s linear;
+}
+
+@keyframes shine {
+    from { left: -50%; }
+    to { left: 150%; }
+}
+
+/* ================= SCROLLBAR FUTURISTIC ================= */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f0c29;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(#7c3aed, #a855f7);
+    border-radius: 10px;
+}
+
+/* ================= INPUT GLOW ================= */
+input:focus {
+    box-shadow: 0 0 10px #a855f7, 0 0 20px #7c3aed;
+    border: 1px solid #a855f7;
+}
+
+/* ================= TABLE FUTURE LOOK ================= */
+table {
+    background: rgba(0,0,0,0.4);
+    color: white;
+}
+
+th {
+    background: linear-gradient(45deg, #7c3aed, #9333ea);
+}
+
+td {
+    border-color: rgba(255,255,255,0.2);
+}
+.user {
+    color: #c084fc;
+    margin-right: 15px;
+    font-weight: bold;
+}
+/* Container should adapt to screen size */
+.result-container {
+    max-width: 1000px; /* desktop max width */
+    width: 95%;        /* mobile-friendly */
+    margin: 20px auto;
+    padding: 10px;
+}
+
+/* Tables scroll on mobile */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* Graphs resize */
+.card img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Buttons stack on small screens */
+@media (max-width: 768px) {
+    .stats-grid {
+        display: block; /* stack stats */
+    }
+
+    .stat-box {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .navbar a {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .back-btn, .download-btn {
+        display: block;
+        width: 90%;
+        margin: 10px auto;
+        text-align: center;
+    }
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.navbar a, .navbar .user {
+    font-size: 14px;
+    margin: 5px;
+}
+@media (max-width: 768px) {
+    .ai-bg {
+        display: none;
+    }
+}
+/* Make all images inside cards scale to mobile screens */
+.card img {
+    max-width: 100%; /* never overflow the card */
+    height: auto;    /* maintain aspect ratio */
+    display: block;  /* avoids extra spacing */
+    margin: 0 auto;  /* center horizontally */
+}
+/* Allow horizontal scroll for wide tables on mobile */
+.table-wrapper {
+    overflow-x: auto;  /* scroll horizontally if table too wide */
+    -webkit-overflow-scrolling: touch; /* smooth scroll for iOS */
+}

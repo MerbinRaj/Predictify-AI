@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predictify AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Predictify AI</h1>
+
+<div class="path">
+    <h2>Login / Signup</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+   <form method="POST">
+    <input type="text" name="username" placeholder="Enter Username" required><br><br>
+    
+    <!-- ✅ Email field -->
+    <input type="email" name="email" placeholder="Enter Email" required><br><br>
+    
+    <input type="password" name="password" placeholder="Enter Password" required><br><br>
+    
+    <button type="submit">Login / Signup</button>
+</form>
+
+    <p style="color:gray;">New user? Just enter details → auto signup</p>
+</div>
+
+</body>
+</html>
